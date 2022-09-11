@@ -1,7 +1,7 @@
 import requests
 import json
-from termcolor import colored
 from rich.console import Console
+import os
 console = Console()
 
 #make random num gen
@@ -14,27 +14,28 @@ def get_word():
     day += 1
     return wordls
 
-def check_word_exist(word):
-    req = requests.get(f"https://thatwordleapi.azurewebsites.net/ask/?word={word}").text
+def check_word_exist():
+    req = requests.get(f"https://thatwordleapi.azurewebsites.net/ask/?word={guess}").text
     data = json.loads(req)
-    print(data)
     if data["Status"] == 200:
         if data["Response"] == True:
             return True
         else:
             print("Not a word")
-            ask_word()
+            return False
     if data["Status"] == 400:
         print("Word must be five letters")
-        ask_word()
+        return False
 
 def ask_word():
+    global guess
     guess = input("")
-    if check_word_exist(guess) == True:
+    while check_word_exist() == False:
+        ask_word()
+    else:
         return guess
 
-def check_word(guess, wordls, guesscount):
-    box = []
+def check_word(box, guess, wordls, guesscount):
     emptyrow = 5 - guesscount
     guessword = " "
     index = guesscount -  1
@@ -55,15 +56,30 @@ def check_word(guess, wordls, guesscount):
         console.print(box[i])
     return guessword
 
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def main():
     newguess = ""
     guesscount = 0
-    while newguess != get_word() or guesscount < 5:
-        wordls = get_word()
+    box = []
+    word = get_word()
+    while newguess != word:
+        if guesscount == 5:
+            break
         newguess = ask_word()
         newguessls = [*newguess]
         guesscount += 1
-        check_word(newguessls, wordls, guesscount)
-
+        check_word(box, newguessls, word, guesscount)
+    if newguess == get_word():
+        print("You win")
+    if guesscount >= 5:
+        print(f"The word was {''.join(get_word())}")
+    again = input("Play again? (y/n)").lower()
+    if again in ["y", "yes"]:
+        clear()
+        main()
+    else:
+        quit()
 
 main()
