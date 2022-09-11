@@ -1,19 +1,20 @@
 import requests
 import json
 from rich.console import Console
+import random
 import os
+import sys
 console = Console()
 
-#make random num gen
-
+#Generate a random word from the api
 def get_word():
-    day = 1
-    req = requests.get(f"https://thatwordleapi.azurewebsites.net/daily/?day={day}").text
+    num = random.randint(1, 2315)
+    req = requests.get(f"https://thatwordleapi.azurewebsites.net/daily/?day={num}").text
     data = json.loads(req)
     wordls = [*data["Response"]]
-    day += 1
     return wordls
 
+#check if the word is a valid word
 def check_word_exist():
     req = requests.get(f"https://thatwordleapi.azurewebsites.net/ask/?word={guess}").text
     data = json.loads(req)
@@ -21,21 +22,37 @@ def check_word_exist():
         if data["Response"] == True:
             return True
         else:
-            print("Not a word")
+            console.print("\n Not a word", style="bold red")
+            clear_input()
             return False
     if data["Status"] == 400:
-        print("Word must be five letters")
+        console.print("\n Word must be five letters", style="bold red")
+        clear_input()
         return False
 
-def ask_word():
+#reset user input
+def clear_input():
+    for i in range(2):
+        sys.stdout.write('\x1b[1A')
+    print(" \033[A                             \033[A")
+    sys.stdout.write('\x1b[1A')
+
+#ask user for a word
+def ask_word(oldguess):
     global guess
-    guess = input("")
+    guess = input("\n ")
+    if guess in oldguess:
+        console.print("\n You already guessed that word", style="bold red")
+        clear_input()
+        ask_word(oldguess)
     while check_word_exist() == False:
-        ask_word()
+        ask_word(oldguess)
     else:
         return guess
 
+#check each letter in the guess against the word and print the result
 def check_word(box, guess, wordls, guesscount):
+    clear()
     emptyrow = 5 - guesscount
     guessword = " "
     index = guesscount -  1
@@ -56,30 +73,43 @@ def check_word(box, guess, wordls, guesscount):
         console.print(box[i])
     return guessword
 
+# Clear the terminal
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def main():
+    clear()
     newguess = ""
     guesscount = 0
+    oldguess = []
     box = []
+    for i in range(5):
+        blankrow = " "
+        blankrow += '[white on black] [/]'*15
+        box.append(blankrow)
+        console.print(box[i])
+    print("\n Enter a 5 letter word")
     word = get_word()
     while newguess != word:
         if guesscount == 5:
             break
-        newguess = ask_word()
+        newguess = ask_word(oldguess)
+        oldguess.append(newguess)
         newguessls = [*newguess]
         guesscount += 1
         check_word(box, newguessls, word, guesscount)
-    if newguess == get_word():
+        print("\n Enter a 5 letter word")
+    if newguess == word:
         print("You win")
     if guesscount >= 5:
-        print(f"The word was {''.join(get_word())}")
-    again = input("Play again? (y/n)").lower()
+        print("\n The word was", end=' ')
+        console.print(f"{''.join(word)}", style="bold white")
+    again = input("\n Play again? (y/n) ").lower()
     if again in ["y", "yes"]:
         clear()
         main()
     else:
+        clear()
         quit()
 
 main()
