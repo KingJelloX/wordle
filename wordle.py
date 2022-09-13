@@ -40,7 +40,7 @@ def clear_input():
 #ask user for a word
 def ask_word(oldguess):
     global guess
-    guess = input("\n ")
+    guess = input("\n ").lower()
     if guess in oldguess:
         console.print("\n You already guessed that word", style="bold red")
         clear_input()
@@ -77,12 +77,18 @@ def check_word(box, guess, wordls, guesscount):
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def letters_left(letters_left, guess):
+    for i in range(5):
+        if guess[i] in letters_left:
+            letters_left.remove(guess[i])
+    return letters_left
 def main():
     clear()
     newguess = ""
     guesscount = 0
     oldguess = []
     box = []
+    letters_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     for i in range(5):
         blankrow = " "
         blankrow += '[white on black] [/]'*15
@@ -99,6 +105,8 @@ def main():
         guesscount += 1
         check_word(box, newguessls, word, guesscount)
         print("\n Enter a 5 letter word")
+        letters_left(letters_left, guess)
+        print(f" Letters left: {letters_left}")
     if newguess == word:
         print("You win")
     if guesscount >= 5:
