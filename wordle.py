@@ -77,11 +77,12 @@ def check_word(box, guess, wordls, guesscount):
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def letters_left(letters_left, guess):
+def letters_left(word, letters_left):
     for i in range(5):
-        if guess[i] in letters_left:
-            letters_left.remove(guess[i])
+        if word[i] in letters_left:
+            letters_left.remove(word[i])
     return letters_left
+    
 def main():
     clear()
     newguess = ""
@@ -105,8 +106,6 @@ def main():
         guesscount += 1
         check_word(box, newguessls, word, guesscount)
         print("\n Enter a 5 letter word")
-        letters_left(letters_left, guess)
-        print(f" Letters left: {letters_left}")
     if newguess == word:
         print("You win")
     if guesscount >= 5:
