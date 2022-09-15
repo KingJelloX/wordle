@@ -76,11 +76,17 @@ def check_word(box, guess, wordls, guesscount):
 def check_letters_left(letters, guess, word):
     for i in range(5):
         if guess[i] == word[i]:
-            index = letters.index(guess[i])
-            letters[index] = f'[white on green]{guess[i]}[/]'
+            try:
+                index = letters.index(guess[i])         #fix multiple letter display issue
+                letters[index] = f'[white on green]{guess[i]}[/]'
+            except ValueError as v:
+                pass
         elif guess[i] in word:
-            index = letters.index(guess[i])
-            letters[index] = f'[white on yellow]{guess[i]}[/]'
+            try:
+                index = letters.index(guess[i])        #add condition to check if letter is already green       
+                letters[index] = f'[white on yellow]{guess[i]}[/]'
+            except ValueError as v:
+                pass
         else:
             try:
                 index = letters.index(guess[i])
