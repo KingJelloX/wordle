@@ -53,7 +53,7 @@ def ask_word(oldguess):
 #check each letter in the guess against the word and print the result
 def check_word(box, guess, wordls, guesscount):
     clear()
-    emptyrow = 5 - guesscount
+    emptyrow = 6 - guesscount
     guessword = " "
     index = guesscount -  1
     for i in range(5):
@@ -69,7 +69,7 @@ def check_word(box, guess, wordls, guesscount):
         blankrow = " "
         blankrow += '[white on black] [/]'*15
         box.append(blankrow)
-    for i in range(5):
+    for i in range(6):
         console.print(box[i])
     return guessword
 
@@ -77,11 +77,29 @@ def check_word(box, guess, wordls, guesscount):
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def letters_left(word, letters_left):
+def check_letters_left(letters, guess, word):
+    letters_def = letters.copy()
     for i in range(5):
-        if word[i] in letters_left:
-            letters_left.remove(word[i])
-    return letters_left
+        if guess[i] in word[i]:
+            try:
+                index = letters_def.index(guess[i])         #fix multiple letter display issue
+                letters[index] = f'[white on yellow]{guess[i]}[/]'
+            except ValueError:
+                pass
+            if guess[i] == word:
+                try:
+                    index = letters_def.index(guess[i])        #add condition to check if letter is already green       
+                    letters[index] = f'[white on green]{guess[i]}[/]'
+                except ValueError:
+                    pass
+        else:
+            try:
+                index = letters_def.index(guess[i])
+                letters[index] = f'[white on red]{guess[i]}[/]'
+            except ValueError:
+                pass
+    for i in letters:
+        console.print(f" {i}", style="bold white", end=' ')
     
 def main():
     clear()
@@ -89,8 +107,8 @@ def main():
     guesscount = 0
     oldguess = []
     box = []
-    letters_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    for i in range(5):
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    for i in range(6):
         blankrow = " "
         blankrow += '[white on black] [/]'*15
         box.append(blankrow)
@@ -106,6 +124,7 @@ def main():
         guesscount += 1
         check_word(box, newguessls, word, guesscount)
         print("\n Enter a 5 letter word")
+        check_letters_left(letters, newguessls, word)
     if newguess == word:
         print("You win")
     if guesscount >= 5:
