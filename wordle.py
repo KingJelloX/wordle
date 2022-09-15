@@ -73,6 +73,23 @@ def check_word(box, guess, wordls, guesscount):
         console.print(box[i])
     return guessword
 
+def check_letters_left(letters, guess, word):
+    for i in range(5):
+        if guess[i] == word[i]:
+            index = letters.index(guess[i])
+            letters[index] = f'[white on green]{guess[i]}[/]'
+        elif guess[i] in word:
+            index = letters.index(guess[i])
+            letters[index] = f'[white on yellow]{guess[i]}[/]'
+        else:
+            try:
+                index = letters.index(guess[i])
+                letters[index] = f'[white on red]{guess[i]}[/]'
+            except ValueError as v:
+                pass
+    for i in letters:
+        console.print(f" {i}", style="bold white", end=' ')
+    
 # Clear the terminal
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -83,6 +100,7 @@ def main():
     guesscount = 0
     oldguess = []
     box = []
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     for i in range(5):
         blankrow = " "
         blankrow += '[white on black] [/]'*15
@@ -98,7 +116,9 @@ def main():
         newguessls = [*newguess]
         guesscount += 1
         check_word(box, newguessls, word, guesscount)
-        print("\n Enter a 5 letter word")
+        print("\n Enter a 5 letter word\n")
+        check_letters_left(letters, newguessls, word)
+        #print("\n")
     if newguess == word:
         print("You win")
     if guesscount >= 5:
