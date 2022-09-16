@@ -86,7 +86,7 @@ def check_letters_left(letters, guess, word):
                 letters[index] = f'[white on yellow]{guess[i]}[/]'
             except ValueError:
                 pass
-            if guess[i] == word:
+            if guess[i] == word[i]:
                 try:
                     index = letters_def.index(guess[i])        #add condition to check if letter is already green       
                     letters[index] = f'[white on green]{guess[i]}[/]'
