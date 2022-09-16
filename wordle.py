@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import tostring
 import requests
 import json
 from rich.console import Console
@@ -79,6 +80,7 @@ def clear():
 
 def check_letters_left(letters, guess, word):
     letters_def = letters.copy()
+    word_dict = count_duplicate(word)
     for i in range(5):
         if guess[i] in word[i]:
             try:
@@ -86,12 +88,16 @@ def check_letters_left(letters, guess, word):
                 letters[index] = f'[white on yellow]{guess[i]}[/]'
             except ValueError:
                 pass
-            if guess[i] == word:
-                try:
-                    index = letters_def.index(guess[i])        #add condition to check if letter is already green       
-                    letters[index] = f'[white on green]{guess[i]}[/]'
-                except ValueError:
-                    pass
+            if guess[i] == word[i]:
+                letter_count = word_dict[guess[i]]
+                if letter_count >= 1:
+                    print(letter_count)
+                    word_dict[guess[i]] -= 1
+                    try:
+                        index = letters_def.index(guess[i])       
+                        letters[index] = f'[white on green]{guess[i]}[/]'
+                    except ValueError:
+                        pass
         else:
             try:
                 index = letters_def.index(guess[i])
@@ -100,7 +106,16 @@ def check_letters_left(letters, guess, word):
                 pass
     for i in letters:
         console.print(f" {i}", style="bold white", end=' ')
-    
+
+def count_duplicate(word):
+    dict = {}
+    for letter in word:
+        if dict.get(letter,None) != None:
+                dict[letter]+=1
+        else:
+            dict[letter] = 1  
+    return dict
+
 def main():
     clear()
     newguess = ""
