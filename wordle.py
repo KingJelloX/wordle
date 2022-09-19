@@ -15,7 +15,7 @@ def get_word():
     wordls = [*data["Response"]]
     return wordls
 
-#check if the word is a valid word
+#Check if the word is a valid word
 def check_word_exist():
     req = requests.get(f"https://thatwordleapi.azurewebsites.net/ask/?word={guess}").text
     data = json.loads(req)
@@ -31,14 +31,14 @@ def check_word_exist():
         clear_input()
         return False
 
-#reset user input
+#Reset user input
 def clear_input():
     for i in range(2):
         sys.stdout.write('\x1b[1A')
     print(" \033[A                             \033[A")
     sys.stdout.write('\x1b[1A')
 
-#ask user for a word
+#Ask user for a word
 def ask_word(oldguess):
     global guess
     guess = input("\n ").lower()
@@ -51,7 +51,7 @@ def ask_word(oldguess):
     else:
         return guess
 
-#check each letter in the guess against the word and print the result
+#Check each letter in the guess against the word and print the result
 def check_word(box, guess, wordls, guesscount):
     clear()
     emptyrow = 6 - guesscount
@@ -74,23 +74,23 @@ def check_word(box, guess, wordls, guesscount):
         console.print(box[i])
     return guessword
 
-# Clear the terminal
+#Clear the terminal
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+#Check which letters are left on the alphabet
 def check_letters_left(letters, guess, word):
     letters_def = letters.copy()
-    word_dict = count_duplicate(word)
     for i in range(5):
-        if guess[i] in word[i]:
+        if guess[i] in word:
             try:
-                index = letters_def.index(guess[i])         #fix multiple letter display issue
+                index = letters_def.index(guess[i])         
                 letters[index] = f'[white on yellow]{guess[i]}[/]'
             except ValueError:
                 pass
             if guess[i] == word[i]:
                 try:
-                    index = letters_def.index(guess[i])        #add condition to check if letter is already green       
+                    index = letters_def.index(guess[i])       
                     letters[index] = f'[white on green]{guess[i]}[/]'
                 except ValueError:
                     pass
@@ -102,15 +102,6 @@ def check_letters_left(letters, guess, word):
                 pass
     for i in letters:
         console.print(f" {i}", style="bold white", end=' ')
-
-def count_duplicate(word):
-    dict = {}
-    for letter in word:
-        if dict.get(letter,None) != None:
-                dict[letter]+=1
-        else:
-            dict[letter] = 1  
-    return dict
 
 def main():
     clear()
