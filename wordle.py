@@ -10,7 +10,7 @@ console = Console()
 #Generate a random word from the api
 def get_word():
     num = random.randint(1, 2315)
-    req = requests.get(f"https://thatwordleapi.azurewebsites.net/daily/?day={num}").text
+    req = requests.get(f"https://thatwordleapi.azurewebsites.net/daily/?day=9").text
     data = json.loads(req)
     wordls = [*data["Response"]]
     return wordls
@@ -81,11 +81,13 @@ def clear():
 #Check which letters are left on the alphabet
 def check_letters_left(letters, guess, word):
     letters_def = letters.copy()
+    word_dict = letter_dict(word) #this here to check word function
     for i in range(5):
         if guess[i] in word:
             try:
-                index = letters_def.index(guess[i])         
+                index = letters_def.index(guess[i])       
                 letters[index] = f'[white on yellow]{guess[i]}[/]'
+                word_dict[guess[i]] -= 1 #this here too
             except ValueError:
                 pass
             if guess[i] == word[i]:
@@ -102,6 +104,15 @@ def check_letters_left(letters, guess, word):
                 pass
     for i in letters:
         console.print(f" {i}", style="bold white", end=' ')
+
+def letter_dict(word):
+    dict = {}
+    for letter in word:
+        if dict.get(letter,None) != None:
+                dict[letter]+=1
+        else:
+            dict[letter] = 1  
+    return dict
 
 def main():
     clear()
@@ -127,6 +138,7 @@ def main():
         check_word(box, newguessls, word, guesscount)
         print("\n Enter a 5 letter word")
         check_letters_left(letters, newguessls, word)
+        print(" ")
     if newguess == word:
         print("You win")
     if guesscount >= 5:
