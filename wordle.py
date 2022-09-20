@@ -54,15 +54,20 @@ def ask_word(oldguess):
 #Check each letter in the guess against the word and print the result
 def check_word(box, guess, wordls, guesscount):
     clear()
+    word_dict = letter_dict(wordls) #this here to check word function
     emptyrow = 6 - guesscount
     guessword = " "
     index = guesscount -  1
     for i in range(5):
+        if guess[i] in wordls and guess[i] != wordls[i]:
+            if word_dict[guess[i]] > 0:
+                guessword += '[white on yellow] [/]' + f'[white on yellow]{guess[i]}[/]' + '[white on yellow] [/]'
+                word_dict[guess[i]] -= 1
+            else:
+                guessword += '[white on black] [/]' + f'[white on black]{guess[i]}[/]' + '[white on black] [/]'
         if guess[i] == wordls[i]:
             guessword += '[white on green] [/]' + f'[white on green]{guess[i]}[/]' + '[white on green] [/]'
-        elif guess[i] in wordls:
-            guessword += '[white on yellow] [/]' + f'[white on yellow]{guess[i]}[/]' + '[white on yellow] [/]'
-        else:
+        if guess[i] not in wordls:
             guessword += '[white on black] [/]' + f'[white on black]{guess[i]}[/]' + '[white on black] [/]'
     box.insert(index, guessword)
     box = box[0:guesscount]
@@ -81,13 +86,11 @@ def clear():
 #Check which letters are left on the alphabet
 def check_letters_left(letters, guess, word):
     letters_def = letters.copy()
-    word_dict = letter_dict(word) #this here to check word function
     for i in range(5):
         if guess[i] in word:
             try:
                 index = letters_def.index(guess[i])       
                 letters[index] = f'[white on yellow]{guess[i]}[/]'
-                word_dict[guess[i]] -= 1 #this here too
             except ValueError:
                 pass
             if guess[i] == word[i]:
