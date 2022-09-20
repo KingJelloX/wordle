@@ -10,7 +10,7 @@ console = Console()
 #Generate a random word from the api
 def get_word():
     num = random.randint(1, 2315)
-    req = requests.get(f"https://thatwordleapi.azurewebsites.net/daily/?day=9").text
+    req = requests.get(f"https://thatwordleapi.azurewebsites.net/daily/?day={num}").text
     data = json.loads(req)
     wordls = [*data["Response"]]
     return wordls
