@@ -54,7 +54,7 @@ def ask_word(oldguess):
 #Check each letter in the guess against the word and print the result
 def check_word(box, guess, wordls, guesscount):
     clear()
-    word_dict = letter_dict(wordls) #this here to check word function
+    word_dict = letter_dict(wordls)
     emptyrow = 6 - guesscount
     guessword = " "
     index = guesscount -  1
@@ -108,6 +108,7 @@ def check_letters_left(letters, guess, word):
     for i in letters:
         console.print(f" {i}", style="bold white", end=' ')
 
+#return a dictionary with the letters of the word and the number of times they appear
 def letter_dict(word):
     dict = {}
     for letter in word:
@@ -124,26 +125,29 @@ def main():
     oldguess = []
     box = []
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    #print empty box
     for i in range(6):
         blankrow = " "
         blankrow += '[white on black] [/]'*15
         box.append(blankrow)
         console.print(box[i])
-    print("\n Enter a 5 letter word")
-    word = get_word()
+    print("\n Enter a 5 letter word\n")
+    #loop until the user guesses the word
+    word = "".join(get_word())
     while newguess != word:
-        if guesscount == 5:
+        if guesscount == 6:
             break
         newguess = ask_word(oldguess)
         oldguess.append(newguess)
         newguessls = [*newguess]
         guesscount += 1
         check_word(box, newguessls, word, guesscount)
-        print("\n Enter a 5 letter word")
+        print("\n Enter a 5 letter word\n")
         check_letters_left(letters, newguessls, word)
         print(" ")
+    #ends game
     if newguess == word:
-        print("You win")
+        console.print("\n You win", style="bold green")
     if guesscount >= 5:
         print("\n The word was", end=' ')
         console.print(f"{''.join(word)}", style="bold white")
