@@ -37,7 +37,7 @@ def check_word_exist(guess):
 def clear_input():
     for i in range(2):
         sys.stdout.write('\x1b[1A')
-    print(" \033[A                                      \033[A")
+    print(" \033[A                                                      \033[A")
     sys.stdout.write('\x1b[1A')
 
 
@@ -89,16 +89,11 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def check_letters_left(guess, word):
-    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-               'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+def check_letters_left(letters, guess, word):
     letter_index = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     for i in range(5):
-        try:
-            index = letter_index.index(guess[i])
-        except ValueError:
-            pass
+        index = letter_index.index(guess[i])
         if guess[i] in word:
             letters[index] = f'[white on yellow]{guess[i]}[/]'
             if guess[i] == word[i]:
@@ -125,6 +120,8 @@ def main():
     guesscount = 0
     oldguess = []
     box = []
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+               'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     for i in range(6):
         blankrow = " "
         blankrow += '[white on black] [/]'*15
@@ -132,7 +129,6 @@ def main():
         console.print(box[i])
     console.print("\n Enter a 5 letter word\n", style="bold white")
     word = get_word()
-    print(word)
     while newguess != word:
         if guesscount == 6:
             break
@@ -141,7 +137,7 @@ def main():
         guesscount += 1
         check_word(box, newguess, word, guesscount)
         console.print("\n Enter a 5 letter word\n", style="bold white")
-        check_letters_left(newguess, word)
+        check_letters_left(letters, newguess, word)
         print("\n")
     if newguess == word:
         console.print("\n You win", style="bold green")
