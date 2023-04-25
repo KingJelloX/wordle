@@ -9,36 +9,36 @@ console = Console()
 
 
 def get_word():
-    num = random.randint(1, 2315)
     req = requests.get(
-        f"https://thatwordleapi.azurewebsites.net/daily/?day={num}").text
-    data = json.loads(req)
-    word = data["Response"]
-    return word
-
-
-def check_word_exist(guess):
-    req = requests.get(
-        f"https://thatwordleapi.azurewebsites.net/ask/?word={guess}").text
-    data = json.loads(req)
-    if data["Status"] == 200:
-        if data["Response"] == True:
-            return True
-        else:
-            console.print("\n Not a word", style="bold red")
-            clear_input()
-            return False
-    if data["Status"] == 400:
-        console.print("\n Word must be five letters", style="bold red")
-        clear_input()
-        return False
+        f"https://random-word-api.herokuapp.com/word?length=5").text
+    res = json.loads(req)
+    data = res[0]
+    return data
 
 
 def clear_input():
     for i in range(2):
         sys.stdout.write('\x1b[1A')
-    print(" \033[A                                                      \033[A")
+    print("\033[A               \033[A")
     sys.stdout.write('\x1b[1A')
+
+
+def check_word_exist(guess):
+    if len(guess) != 5:
+        console.print("\n Word must be five letters", style="bold red")
+        clear_input()
+        return False
+    else:
+        req = requests.get(
+            f"https://api.dictionaryapi.dev/api/v2/entries/en/{guess}").text
+        data = json.loads(req)
+        if type(data) == list:
+            return True
+        else:
+            console.print(
+                "\n Not a word              \033", style="bold red")
+            clear_input()
+            return False
 
 
 def ask_word(oldguess):
