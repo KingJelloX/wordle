@@ -1,10 +1,9 @@
-from xml.etree.ElementTree import tostring
 import requests
 import json
 from rich.console import Console
-import random
 import os
 import sys
+
 console = Console()
 
 
@@ -13,7 +12,7 @@ def get_word():
         f"https://random-word-api.herokuapp.com/word?length=5").text
     res = json.loads(req)
     data = res[0]
-    return data
+    return data"
 
 
 def clear_input():
@@ -36,7 +35,7 @@ def check_word_exist(guess):
             return True
         else:
             console.print(
-                "\n Not a word              \033", style="bold red")
+                "\n Not a word                  \033", style="bold red")
             clear_input()
             return False
 
@@ -70,8 +69,9 @@ def check_word(box, guess, word, guesscount):
                 guessword += '[white on black] [/]' + \
                     f'[white on black]{guess[i]}[/]' + '[white on black] [/]'
         if guess[i] == word[i]:
-            guessword += '[white on green] [/]' + \
-                f'[white on green]{guess[i]}[/]' + '[white on green] [/]'
+            if word_dict[guess[i]] > 0:
+                guessword += '[white on green] [/]' + \
+                    f'[white on green]{guess[i]}[/]' + '[white on green] [/]'
         if guess[i] not in word:
             guessword += '[white on black] [/]' + \
                 f'[white on black]{guess[i]}[/]' + '[white on black] [/]'
