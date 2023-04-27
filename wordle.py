@@ -35,7 +35,7 @@ def check_word_exist(guess):
             return True
         else:
             console.print(
-                "\n Not a word                  \033", style="bold red")
+                "\n Not a word                      \033", style="bold red")
             clear_input()
             return False
 
