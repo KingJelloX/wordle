@@ -12,13 +12,13 @@ def get_word():
         f"https://random-word-api.herokuapp.com/word?length=5").text
     res = json.loads(req)
     data = res[0]
-    return data"
+    return data
 
 
 def clear_input():
     for i in range(2):
         sys.stdout.write('\x1b[1A')
-    print("\033[A               \033[A")
+    print("\033[A                       \033[A")
     sys.stdout.write('\x1b[1A')
 
 
@@ -89,18 +89,18 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def check_letters_left(letters, guess, word):
+def check_letters_left(lettersArr, guess, word):
     letter_index = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    for i in range(5):
-        index = letter_index.index(guess[i])
-        if guess[i] in word:
-            letters[index] = f'[white on yellow]{guess[i]}[/]'
-            if guess[i] == word[i]:
-                letters[index] = f'[white on green]{guess[i]}[/]'
+    for letter in guess:
+        index = letter_index.index(letter)
+        if letter in word:
+            lettersArr[index] = f'[white on yellow]{letter}[/]'
+            if letter == word[i]:
+                lettersArr[index] = f'[white on green]{letter}[/]'
         else:
-            letters[index] = f'[white on red]{guess[i]}[/]'
-    for i in letters:
+            lettersArr[index] = f'[white on red]{letter}[/]'
+    for i in lettersArr:
         console.print(f" {i}", style="bold white", end=' ')
 
 
