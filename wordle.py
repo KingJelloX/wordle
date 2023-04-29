@@ -12,7 +12,7 @@ def get_word():
         f"https://random-word-api.herokuapp.com/word?length=5").text
     res = json.loads(req)
     data = res[0]
-    return data
+    return "beats"
 
 
 def clear_input():
@@ -64,7 +64,6 @@ def check_word(box, guess, word, guesscount):
             if word_dict[guess[i]] > 0:
                 guessword += '[white on yellow] [/]' + \
                     f'[white on yellow]{guess[i]}[/]' + '[white on yellow] [/]'
-                word_dict[guess[i]] -= 1
             else:
                 guessword += '[white on black] [/]' + \
                     f'[white on black]{guess[i]}[/]' + '[white on black] [/]'
@@ -72,6 +71,7 @@ def check_word(box, guess, word, guesscount):
             if word_dict[guess[i]] > 0:
                 guessword += '[white on green] [/]' + \
                     f'[white on green]{guess[i]}[/]' + '[white on green] [/]'
+                word_dict[guess[i]] -= 1
         if guess[i] not in word:
             guessword += '[white on black] [/]' + \
                 f'[white on black]{guess[i]}[/]' + '[white on black] [/]'
@@ -92,12 +92,15 @@ def clear():
 def check_letters_left(lettersArr, guess, word):
     letter_index = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    duplicate = []
     for i in range(5):
         index = letter_index.index(guess[i])
         if guess[i] in word:
-            lettersArr[index] = f'[white on yellow]{guess[i]}[/]'
+            if guess[i] not in duplicate:
+                lettersArr[index] = f'[white on yellow]{guess[i]}[/]'
             if guess[i] == word[i]:
                 lettersArr[index] = f'[white on green]{guess[i]}[/]'
+                duplicate.append(guess[i])
         else:
             lettersArr[index] = f'[white on red]{guess[i]}[/]'
     for i in lettersArr:
