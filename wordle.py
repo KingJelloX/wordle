@@ -92,14 +92,14 @@ def clear():
 def check_letters_left(lettersArr, guess, word):
     letter_index = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    for letter in guess:
-        index = letter_index.index(letter)
-        if letter in word:
-            lettersArr[index] = f'[white on yellow]{letter}[/]'
-            if letter == word[i]:
-                lettersArr[index] = f'[white on green]{letter}[/]'
+    for i in range(5):
+        index = letter_index.index(guess[i])
+        if guess[i] in word:
+            lettersArr[index] = f'[white on yellow]{guess[i]}[/]'
+            if guess[i] == word[i]:
+                lettersArr[index] = f'[white on green]{guess[i]}[/]'
         else:
-            lettersArr[index] = f'[white on red]{letter}[/]'
+            lettersArr[index] = f'[white on red]{guess[i]}[/]'
     for i in lettersArr:
         console.print(f" {i}", style="bold white", end=' ')
 
