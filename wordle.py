@@ -12,7 +12,7 @@ def get_word():
         f"https://random-word-api.herokuapp.com/word?length=5").text
     res = json.loads(req)
     data = res[0]
-    return "beats"
+    return data
 
 
 def clear_input():
